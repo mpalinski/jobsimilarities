@@ -306,7 +306,7 @@ $(".buttons-excel span").text("Drukuj raport");
     jobName=jobInfo['job'].unique()
 
     if len(jobIndex)==1:
-        jobInfo=jobInfo.sort_values(['job','similarityIndex','jobCode'],ascending=False).groupby(['job','jobPotential'])['similarJobs','similarityIndex','medianWage','jobPotential','jobCode'].head(15)
+        jobInfo=jobInfo.sort_values(['job','similarityIndex','jobCode'],ascending=False).groupby(['job','jobPotential'])[['similarJobs','similarityIndex','medianWage','jobPotential','jobCode']].head(15)
         jobInfo=jobInfo.groupby(['similarJobs','jobPotential','medianWage','jobCode']).mean().reset_index().sort_values('similarityIndex',ascending=False)
         jobInfo[['medianWage','similarityIndex']]=jobInfo[['medianWage','similarityIndex']].astype(int)
         jobInfo['medianWage']=jobInfo['medianWage'].replace(0,"Brak danych")
@@ -334,7 +334,7 @@ $(".buttons-excel span").text("Drukuj raport");
                                  '9':'podstawowe'})
 
     elif len(jobIndex)==2:
-        jobInfo=jobInfo.sort_values(['job','similarityIndex','jobCode'],ascending=False).groupby(['job','jobPotential'])['similarJobs','similarityIndex','medianWage','jobPotential','jobCode'].head(7)
+        jobInfo=jobInfo.sort_values(['job','similarityIndex','jobCode'],ascending=False).groupby(['job','jobPotential'])[['similarJobs','similarityIndex','medianWage','jobPotential','jobCode']].head(7)
         jobInfo=jobInfo.groupby(['similarJobs','jobPotential','medianWage','jobCode']).mean().reset_index().sort_values('similarityIndex',ascending=False)
         jobInfo[['medianWage','similarityIndex']]=jobInfo[['medianWage','similarityIndex']].astype(int)
         jobInfo['medianWage']=jobInfo['medianWage'].replace(0,"Brak danych")
@@ -361,7 +361,7 @@ $(".buttons-excel span").text("Drukuj raport");
                                  '8':'średnie',
                                  '9':'podstawowe'})
     elif len(jobIndex)==3:
-        jobInfo=jobInfo.sort_values(['job','similarityIndex','jobCode'],ascending=False).groupby(['job','jobPotential'])['similarJobs','similarityIndex','medianWage','jobPotential','jobCode'].head(5)
+        jobInfo=jobInfo.sort_values(['job','similarityIndex','jobCode'],ascending=False).groupby(['job','jobPotential'])[['similarJobs','similarityIndex','medianWage','jobPotential','jobCode']].head(5)
         jobInfo=jobInfo.groupby(['similarJobs','jobPotential','medianWage','jobCode']).mean().reset_index().sort_values('similarityIndex',ascending=False)
         jobInfo[['medianWage','similarityIndex']]=jobInfo[['medianWage','similarityIndex']].astype(int)
         jobInfo['medianWage']=jobInfo['medianWage'].replace(0,"Brak danych")
