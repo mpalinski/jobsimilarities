@@ -1,0 +1,9 @@
+<html>
+<h1>{{job_info['job'].values[0]}}</h1>
+
+{% for index,row in job_info.iterrows() %}
+<p id={{row['similarJobs']}}>{{row['similarJobs']}}: {{ row['similarityIndex'] }}</p>
+{% endfor %}
+
+
+</html>

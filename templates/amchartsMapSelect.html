@@ -1,0 +1,131 @@
+<script>
+// Create map instance
+var chart = am4core.create("mapSelectDiv", am4maps.MapChart);
+
+// Set map definition
+chart.geodata = am4geodata_polandLow;
+
+// Set projection
+chart.projection = new am4maps.projections.Mercator();
+
+chart.seriesContainer.draggable = false;
+chart.maxZoomLevel = 1;
+
+// Create map polygon series
+var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+
+// Make map load polygon (like country names) data from GeoJSON
+polygonSeries.useGeodata = true;
+// Add some custom data
+polygonSeries.data = [{
+//   "id": "PL-28",
+//   "color": am4core.color("#3F4B3B"),
+//   "description": ''
+// } 
+}]
+
+// Configure series
+var polygonTemplate = polygonSeries.mapPolygons.template;
+polygonTemplate.tooltipText = "{name}";
+polygonTemplate.fill = am4core.color("#2f90a8");
+polygonTemplate.events.on("hit", function(ev) {
+  var data = ev.target.dataItem.dataContext;
+  const request = new XMLHttpRequest()
+  request.open('POST', `/mapClick/${JSON.stringify(data.id)}`)
+  request.send()
+  // console.log(data.id)
+
+  ev.target.isActive=!ev.target.isActive; 
+});
+
+// Create the button
+var selectAllButton = chart.chartContainer.createChild(am4core.Button);
+// selectAllButton.text = "Select All";
+selectAllButton.fontSize = 12;
+selectAllButton.padding(5, 5, 5, 5);
+selectAllButton.align = "right";
+selectAllButton.marginRight = 150;
+selectAllButton.icon = new am4core.Sprite();
+selectAllButton.icon.path = "M13.388,9.624h-3.011v-3.01c0-0.208-0.168-0.377-0.376-0.377S9.624,6.405,9.624,6.613v3.01H6.613c-0.208,0-0.376,0.168-0.376,0.376s0.168,0.376,0.376,0.376h3.011v3.01c0,0.208,0.168,0.378,0.376,0.378s0.376-0.17,0.376-0.378v-3.01h3.011c0.207,0,0.377-0.168,0.377-0.376S13.595,9.624,13.388,9.624z M10,1.344c-4.781,0-8.656,3.875-8.656,8.656c0,4.781,3.875,8.656,8.656,8.656c4.781,0,8.656-3.875,8.656-8.656C18.656,5.219,14.781,1.344,10,1.344z M10,17.903c-4.365,0-7.904-3.538-7.904-7.903S5.635,2.096,10,2.096S17.903,5.635,17.903,10S14.365,17.903,10,17.903z";
+// selectAllButton.label.text = "Polska";
+selectAllButton.icon.verticalCenter = "middle";
+selectAllButton.icon.horizontalCenter = "left";
+// Add a click event listener
+// selectAllButton.events.on("hit", function() {
+//   // var allSelected = true;
+//   // polygonSeries.mapPolygons.each(function(polygon) {
+//   //   if (!polygon.isActive) {
+//   //     allSelected = false;
+//   //   }
+//   // });
+
+//   polygonSeries.mapPolygons.each(function(polygon) {
+//     // polygon.isActive =! allSelected;
+//     polygon.isActive =! polygon.isActive;
+
+//   });
+
+  
+
+//   if (allSelected) {
+//     // selectAllButton.text = "Select All";
+//     const request = new XMLHttpRequest()
+//     request.open('POST', `/mapClick/${JSON.stringify(['PL-02', 'PL-04', 'PL-06', 'PL-08', 'PL-10', 'PL-12', 'PL-14', 'PL-16', 'PL-18', 'PL-20', 'PL-22', 'PL-24', 'PL-26', 'PL-28', 'PL-30', 'PL-32'])}`)
+//     request.send()
+//   } else {
+//     // selectAllButton.text = "Deselect All";
+//     const request = new XMLHttpRequest()
+//     request.open('POST', `/mapClick/${JSON.stringify(['PL-02', 'PL-04', 'PL-06', 'PL-08', 'PL-10', 'PL-12', 'PL-14', 'PL-16', 'PL-18', 'PL-20', 'PL-22', 'PL-24', 'PL-26', 'PL-28', 'PL-30', 'PL-32'])}`)
+//     request.send()
+//   }
+// });
+
+// add event listener to toggle selection of all regions
+selectAllButton.events.on("hit", function() {
+  // check if any regions are selected
+  var anySelected = false;
+  polygonSeries.mapPolygons.each(function(polygon) {
+    if (polygon.isActive) {
+      anySelected = true;
+    }
+  });
+  
+  // if any regions are selected, unselect all; otherwise select all
+  if (anySelected) {
+    polygonSeries.mapPolygons.each(function(polygon) {
+      polygon.isActive = false;
+      const request = new XMLHttpRequest()
+      request.open('POST', `/mapClick/${JSON.stringify(['PL-02', 'PL-04', 'PL-06', 'PL-08', 'PL-10', 'PL-12', 'PL-14', 'PL-16', 'PL-18', 'PL-20', 'PL-22', 'PL-24', 'PL-26', 'PL-28', 'PL-30', 'PL-32'])}`)
+      request.send()
+    });
+  } else {
+    polygonSeries.mapPolygons.each(function(polygon) {
+      polygon.isActive = true;
+      const request = new XMLHttpRequest()
+      request.open('POST', `/mapClick/${JSON.stringify(['PL-02', 'PL-04', 'PL-06', 'PL-08', 'PL-10', 'PL-12', 'PL-14', 'PL-16', 'PL-18', 'PL-20', 'PL-22', 'PL-24', 'PL-26', 'PL-28', 'PL-30', 'PL-32'])}`)
+      request.send()
+    });
+  }
+});
+
+
+
+
+// Create active state
+var activeState = polygonTemplate.states.create("active");
+activeState.properties.fill = am4core.color("#0f3d5d");
+
+
+
+// Create hover state and set alternative fill color
+// var hs = polygonTemplate.states.create("hover");
+// hs.properties.fill = am4core.color("#0f3d5d");
+
+
+
+
+
+if(chart.logo) {
+  chart.logo.disabled = true;
+  }
+</script>
